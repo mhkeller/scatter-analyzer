@@ -43,10 +43,6 @@
 	/** @type {any} */
 	export let logScaleY;
 	/** @type {any} */
-	export let stateFilter;
-	/** @type {any} */
-	export let dataset;
-	/** @type {any} */
 	export let constantR;
 	/** @type {any} */
 	export let mapboxToken;

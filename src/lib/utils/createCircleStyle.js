@@ -34,7 +34,6 @@ function genRadius (extent, fieldName, rRange, bins = [0, 1, 2, 3, 4, 6, 7]) {
 }
 
 export default function createCircleStyle (color, radius, constantR, { rRange, colorByScheme }) {
-	console.log(color, radius, constantR, { rRange, colorByScheme });
 	const baseRadius = {
 		base: 1.75,
 		stops: [
