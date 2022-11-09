@@ -428,10 +428,12 @@
 	.control.field:before {
 		content: attr(data-which);
 		display: block;
+		font-size: 15px;
+		margin-bottom: 3px;
 		padding: 2px 0;
 	}
 	.control-group[data-which="range-filters"] {
-		margin-top: 51px;
+		margin-top: 21px;
 	}
 	.control-group[data-which="range-filters"] .control:before {
 		font-family: monospace;
