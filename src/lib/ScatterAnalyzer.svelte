@@ -307,7 +307,7 @@
 		flex: 1
 	}
 	.gutter {
-		width: 12px;
+		width: 40px;
 	}
 	.mainbar {
 		flex: 7;
@@ -361,7 +361,7 @@
 	}
 
 	.control {
-		margin-bottom: 14px;
+		margin-bottom: 10px;
 		white-space: nowrap;
 	}
 

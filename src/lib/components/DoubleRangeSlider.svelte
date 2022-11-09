@@ -128,9 +128,9 @@
 			on:dragmove="{setHandlePosition('end')}"
 			style:left="{100 * end}%"
 		></div>
-	<div class="values">
-		<div>{start.toFixed(2)} ({labelExtent[0]})</div>
-		<div>{end.toFixed(2)} ({labelExtent[1]})</div>
+	<div class="slider-values">
+		<div class="slider-value">{start.toFixed(2)} ({labelExtent[0]})</div>
+		<div class="slider-value">{end.toFixed(2)} ({labelExtent[1]})</div>
 	</div>
 	</div>
 </div>
@@ -187,19 +187,20 @@
 		bottom: 0;
 		cursor: col-resize;
 	}
-	.values {
+	.slider-values {
 		width: 100%;
 		display: flex;
 		font-size: 12px;
 		padding-top: 12px;
+		color: #999;
 	}
-	.values div {
+	.slider-values .slider-value {
 		flex: 1;
 	}
-	.values div:nth-child(1) {
+	.slider-values .slider-value:nth-child(1) {
 		text-align: left;
 	}
-	.values div:nth-child(2) {
+	.slider-values .slider-value:nth-child(2) {
 		text-align: right;
 	}
 </style>
