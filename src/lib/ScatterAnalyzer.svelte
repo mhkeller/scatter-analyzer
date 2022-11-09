@@ -235,7 +235,7 @@
 	<div class="gutter"></div>
 	<div class="mainbar">
 		<div class="copy-box">
-			<span>{xKey}</span> vs. <span>{yKey}</span>
+			<span data-which="x axis">{xKey}</span> vs. <span data-which="y axis">{yKey}</span>
 			{#if constantR === false} sized by <span>{rKey}</span>
 			{/if} colored by <span>{colorBy}</span>
 		</div>
@@ -368,6 +368,17 @@
 		background: #fff;
 		border: 1px solid #000;
 		color: #000;
+		position: relative;
+	}
+	.copy-box span:before {
+		content: attr(data-which);
+		text-transform: uppercase;
+		color: #999;
+		position: absolute;
+		top: 0;
+		left: 0;
+		transform: translateY(-100%);
+		font-size: 12px;
 	}
 	.copy-box {
 		font-size: 16px;
