@@ -132,6 +132,10 @@
 	}));
 </script>
 
+<div class="intro">
+	<h1>Scatter Analyzer</h1>
+	<p>Fiddle with the buttons</p>
+</div>
 
 <div class="scatter-analyzer-wrapper">
 
@@ -294,6 +298,10 @@
 </div>
 
 <style>
+	.intro {
+		font-family: Helvetica, sans-serif;
+		padding-left: 14px;
+	}
 	.scatter-analyzer-wrapper {
 		background: #f5f8fa;
 		padding: 14px;
