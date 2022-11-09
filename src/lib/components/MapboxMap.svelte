@@ -22,6 +22,11 @@
 	/** @type {Boolean} */
 	export let colorByScheme;
 
+	/** @type {String} */
+	export let lngKey = 'lng';
+	/** @type {String} */
+	export let latKey = 'lat';
+
 	/** @type {Object[]} */
 	export let features;
 	/** @type {String[]} */
@@ -44,7 +49,7 @@
 				properties: filterObject(d, tooltipKeys),
 				geometry: {
 					type: 'Point',
-					coordinates: [+d.lng, +d.lat]
+					coordinates: [+d[lngKey], +d[latKey]]
 				}
 			};
 		});
@@ -84,6 +89,7 @@
 		map = new mapboxgl.Map({
 			container: 'map-el',
 			style: 'mapbox://styles/mapbox/streets-v9',
+				// TODO, make this customizable
 				zoom: 3,
 				center: [-100.2440142, 40.1643667]
 		});
@@ -98,7 +104,6 @@
 				const features = map.queryRenderedFeatures(e.point).filter(i => i.layer.id === layerId);
 				tooltip.setLngLat(e.lngLat);
 				map.getCanvas().style.cursor = features.length ? 'pointer' : '';
-				// console.log('features', features);
 				tooltipFeatures = features;
 			});
 

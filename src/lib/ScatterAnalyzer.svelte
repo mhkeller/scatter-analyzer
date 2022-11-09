@@ -132,186 +132,191 @@
 	}));
 </script>
 
+
 <div class="scatter-analyzer-wrapper">
 
-	<!-- Range filters -->
-	<div style="margin: 14px 0 7px 0;font-weight:bold;">Filter by:</div>
-	{#each Object.keys(filters) as key}
-		<div class="control field" data-which="{key}">
-			<div class="slider">
-				<DoubleRangeSlider
-					bind:start={filters[key][0]}
-					bind:end={filters[key][1]}
-				/>
-			</div>
-			<span>{filters[key][0].toFixed(2)} - {filters[key][1].toFixed(2)} ({formatNumber2(allExtents[key][0])}, {formatNumber2(allExtents[key][1])})</span>
-		</div>
-	{/each}
-
-	<!-- Color dropdown -->
-	<div class="control select" data-which="Color by">
-		<select bind:value={colorBy}>
-			{#each numFields as field, i}
-				<option value="{field}">{formatField(field)}</option>
-				<option value="{`${field}_qtl`}">{formatField(`${field}_qtl`)}</option>
-			{/each}
-			<option value="state_name">state_name</option>
-		</select>
-		{#if colorBy !== 'state_name'}
-			<span>min: {formatNumber(dataExtent[0])}, max: {formatNumber(dataExtent[1])}</span>
-			<label for="lock-extent-color"><input id="lock-extent-color" type="checkbox" bind:checked={lockExtentColor}/> Lock extent</label>
-		{/if}
-	</div>
-
-	<!-- Axis dropdowns -->
-	<div class="control select" data-which="X-Axis">
-		<select bind:value={xKey}>
-			{#each numFields as field}
-				<option value="{field}">{formatField(field)}</option>
-				<option value="{`${field}_qtl`}">{formatField(`${field}_qtl`)}</option>
-			{/each}
-		</select>
-		<span>min: {formatNumber(dataExtentXKey[0])}, max: {formatNumber(dataExtentXKey[1])}</span>
-		<label for="lock-extent-x"><input id="lock-extent-x" type="checkbox" bind:checked={lockExtentX}/> Lock extent</label>
-		<label for="log-scale-x"><input id="log-scale-x" type="checkbox" bind:checked={logScaleX}/> Log scale</label>
-	</div>
-	<div class="control select" data-which="Y-Axis">
-		<select bind:value={yKey}>
-			{#each numFields as field}
-				<option value="{field}">{formatField(field)}</option>
-				<option value="{`${field}_qtl`}">{formatField(`${field}_qtl`)}</option>
-			{/each}
-		</select>
-		<span>min: {formatNumber(dataExtentYKey[0])}, max: {formatNumber(dataExtentYKey[1])}</span>
-		<label for="lock-extent-y"><input id="lock-extent-y" type="checkbox" bind:checked={lockExtentY}/> Lock extent</label>
-		<label for="log-scale-y"><input id="log-scale-y" type="checkbox" bind:checked={logScaleY}/> Log scale</label>
-	</div>
-	<div class="control select" data-which="Radius">
-		<select bind:value={rKey}>
-			{#each numFields as field}
-				<option value="{field}">{formatField(field)}</option>
-				<option value="{`${field}_qtl`}">{formatField(`${field}_qtl`)}</option>
-			{/each}
-		</select>
-		<span>min: {formatNumber(dataExtentRKey[0])}, max: {formatNumber(dataExtentRKey[1])}</span>
-		<label for="lock-extent-r"><input id="lock-extent-r" type="checkbox" bind:checked={lockExtentR}/> Lock extent</label>
-		<label for="constant-r"><input id="constant-r" type="checkbox" bind:checked={constantR}/> Fixed radius</label>
-	</div>
-	<!-- <div class="control checkbox" data-which="Global extent">
-		<label for="global-extent"><input id="global-extent" type="checkbox" bind:checked={globalExtent}/></label>
-	</div> -->
-
-	<!-- Scatter Chart -->
-	<div class="chart-container" data-which="chart">
-		<LayerCake
-			padding={{ top: 10, right: 5, bottom: 20, left: 55 }}
-			x='{xKey}'
-			y='{yKey}'
-			r='{rKey}'
-			z='{colorBy}'
-			xScale={logScaleX ? scaleLog() : scaleLinear()}
-			yScale={logScaleY ? scaleLog() : scaleLinear()}
-			zScale={colorScale}
-			zDomain={colorBy === 'state_name' ? [...stateNames] : [null, null]}
-			zRange={colorBy === 'state_name' ? colorByCatScheme : [colorByScheme[0], colorByScheme[colorByScheme.length - 1]]}
-			xPadding={logScaleX ? [0, 40] : [25, 25]}
-			yPadding={logScaleY ? [0, 40] : [25, 25]}
-			rRange={constantR ? [r, r] : rRange}
-			data={filteredFeatures}
-			extents={{
-				x: lockExtentX ? dataExtentXKey : undefined,
-				y: lockExtentY ? dataExtentYKey : undefined,
-				r: lockExtentR ? dataExtentRKey : undefined
-			}}
-		>
-			<Svg>
-				<AxisX
-					ticks={logScaleX ? 5 : 10}
-				/>
-				<AxisY
-					ticks={logScaleY ? 5 : 4}
-				/>
-				<!-- <ScatterSvg
-					{colorBy}
-					ordinalDomain={[...stateNames]}
-					extent={ dataExtent }
-					{r}
-					strokeStyle='rgba(0, 0, 0, 0.5)'
-				/> -->
-			</Svg>
-
-			<Canvas>
-				<ScatterCanvas
-					{r}
-					strokeStyle='rgba(0, 0, 0, 0.5)'
-				/>
-			</Canvas>
-			<Html>
-				<!-- <InfoBox/> -->
-				<QuadTree
-					let:x
-					let:y
-					let:visible
-					let:found
-					let:radius
-				>
-					<div
-						class="circle"
-						style="
-							top:{y}px;
-							left:{x}px;
-							display: { visible ? 'block' : 'none' };
-							width:{radius * 2}px;
-							height:{radius * 2}px;
-						"
-					></div>
-					<div
-						class="tooltip"
-						style="
-							display: { visible ? 'block' : 'none' };
-							top:{y}px;
-							left:{x}px;
-						"
-					>
-						{#each Object.keys(found).filter(d => found[d] !== null) as key}
-							{#if (Array.isArray(tooltipKeys) && tooltipKeys.includes(key)) || !Array.isArray(tooltipKeys)}
-								<div class="tooltip-row"><span class="key">{key}:</span> <span class="value">{formatNumber2(found[key])}</span></div>
-							{/if}
-						{/each}
+	<div class="sidebar-a">
+		<div class="control-group" which="range-filters">
+			<div class="group-label">Filter by:</div>
+			{#each Object.keys(filters) as key}
+				<div class="control field" data-which="{key}">
+					<div class="slider">
+						<DoubleRangeSlider
+							bind:start={filters[key][0]}
+							bind:end={filters[key][1]}
+							labelExtent={allExtents[key].map(formatNumber2)}
+						/>
 					</div>
-				</QuadTree>
-			</Html>
-		</LayerCake>
+				</div>
+			{/each}
+		</div>
+
+		<div class="control-group" data-which="key-selectors">
+			<div class="control select" data-which="Color by">
+				<select bind:value={colorBy}>
+					{#each numFields as field, i}
+						<option value="{field}">{formatField(field)}</option>
+						<option value="{`${field}_qtl`}">{formatField(`${field}_qtl`)}</option>
+					{/each}
+				</select>
+			</div>
+
+			<!-- Axis dropdowns -->
+			<div class="control select" data-which="X-Axis">
+				<select bind:value={xKey}>
+					{#each numFields as field}
+						<option value="{field}">{formatField(field)}</option>
+						<option value="{`${field}_qtl`}">{formatField(`${field}_qtl`)}</option>
+					{/each}
+				</select>
+				<span>min: {formatNumber(dataExtentXKey[0])}, max: {formatNumber(dataExtentXKey[1])}</span>
+				<label for="lock-extent-x"><input id="lock-extent-x" type="checkbox" bind:checked={lockExtentX}/> Lock extent</label>
+				<label for="log-scale-x"><input id="log-scale-x" type="checkbox" bind:checked={logScaleX}/> Log scale</label>
+			</div>
+			<div class="control select" data-which="Y-Axis">
+				<select bind:value={yKey}>
+					{#each numFields as field}
+						<option value="{field}">{formatField(field)}</option>
+						<option value="{`${field}_qtl`}">{formatField(`${field}_qtl`)}</option>
+					{/each}
+				</select>
+				<span>min: {formatNumber(dataExtentYKey[0])}, max: {formatNumber(dataExtentYKey[1])}</span>
+				<label for="lock-extent-y"><input id="lock-extent-y" type="checkbox" bind:checked={lockExtentY}/> Lock extent</label>
+				<label for="log-scale-y"><input id="log-scale-y" type="checkbox" bind:checked={logScaleY}/> Log scale</label>
+			</div>
+			<div class="control select" data-which="Radius">
+				<select bind:value={rKey}>
+					{#each numFields as field}
+						<option value="{field}">{formatField(field)}</option>
+						<option value="{`${field}_qtl`}">{formatField(`${field}_qtl`)}</option>
+					{/each}
+				</select>
+				<span>min: {formatNumber(dataExtentRKey[0])}, max: {formatNumber(dataExtentRKey[1])}</span>
+				<label for="lock-extent-r"><input id="lock-extent-r" type="checkbox" bind:checked={lockExtentR}/> Lock extent</label>
+				<label for="constant-r"><input id="constant-r" type="checkbox" bind:checked={constantR}/> Fixed radius</label>
+			</div>
+		</div>
 	</div>
 
-	<!-- Maps -->
-	<div class="chart-container" data-which="map">
-		<MapboxMap
-			colorKey={colorBy}
-			rKey={rKey}
-			colorExtent={dataExtent}
-			rExtent={dataExtentRKey}
-			features={filteredFeatures}
-			{tooltipKeys}
-			{constantR}
-			{rRange}
-			{colorByScheme}
-			accessToken={mapboxToken}
-		/>
-	</div>
+	<div class="mainbar">
+		<!-- Scatter Chart -->
+		<div class="chart-container" data-which="chart">
+			<LayerCake
+			padding={{ top: 10, right: 5, bottom: 20, left: 55 }}
+				x='{xKey}'
+				y='{yKey}'
+				r='{rKey}'
+				z='{colorBy}'
+				xScale={logScaleX ? scaleLog() : scaleLinear()}
+				yScale={logScaleY ? scaleLog() : scaleLinear()}
+				zScale={colorScale}
+				zRange={[colorByScheme[0], colorByScheme[colorByScheme.length - 1]]}
+				xPadding={logScaleX ? [0, 40] : [25, 25]}
+				yPadding={logScaleY ? [0, 40] : [25, 25]}
+				rRange={constantR ? [r, r] : rRange}
+				data={filteredFeatures}
+				extents={{
+					x: lockExtentX ? dataExtentXKey : undefined,
+					y: lockExtentY ? dataExtentYKey : undefined,
+					r: lockExtentR ? dataExtentRKey : undefined
+				}}
+			>
+				<Svg>
+					<AxisX
+						ticks={logScaleX ? 5 : 10}
+					/>
+					<AxisY
+						ticks={logScaleY ? 5 : 4}
+					/>
+				</Svg>
 
-</div>"
+				<Canvas>
+					<ScatterCanvas
+						{r}
+						strokeStyle='rgba(0, 0, 0, 0.5)'
+					/>
+				</Canvas>
+				<Html>
+					<!-- <InfoBox/> -->
+					<QuadTree
+						let:x
+						let:y
+						let:visible
+						let:found
+						let:radius
+					>
+						<div
+							class="circle"
+							style="
+								top:{y}px;
+								left:{x}px;
+								display: { visible ? 'block' : 'none' };
+								width:{radius * 2}px;
+								height:{radius * 2}px;
+							"
+						></div>
+						<div
+							class="tooltip"
+							style="
+								display: { visible ? 'block' : 'none' };
+								top:{y}px;
+								left:{x}px;
+							"
+						>
+							{#each Object.keys(found).filter(d => found[d] !== null) as key}
+								{#if (Array.isArray(tooltipKeys) && tooltipKeys.includes(key)) || !Array.isArray(tooltipKeys)}
+									<div class="tooltip-row"><span class="key">{key}:</span> <span class="value">{formatNumber2(found[key])}</span></div>
+								{/if}
+							{/each}
+						</div>
+					</QuadTree>
+				</Html>
+			</LayerCake>
+		</div>
+
+		<!-- Maps -->
+		<div class="chart-container" data-which="map">
+			<MapboxMap
+				colorKey={colorBy}
+				rKey={rKey}
+				colorExtent={dataExtent}
+				rExtent={dataExtentRKey}
+				features={filteredFeatures}
+				{tooltipKeys}
+				{constantR}
+				{rRange}
+				{colorByScheme}
+				accessToken={mapboxToken}
+			/>
+		</div>
+	</div>
+</div>
 
 <style>
 	.scatter-analyzer-wrapper {
+		background: #f5f8fa;
+		padding: 14px;
 		width: 100%;
-		max-width: 800px;
-		margin: 0 auto;
 		font-family: Helvetica, sans-serif;
+		display: flex;
+		flex-direction: row;
 	}
+	.sidebar-a {
+		flex: 1
+	}
+	.mainbar {
+		flex: 7;
+		position: sticky;
+		display: flex;
+		flex-direction: column;
+	}
+
+	.group-label {
+		font-weight: bold;
+	}
+
   .chart-container {
-    width: 100%;
-    height: 500px;
+    width: auto;
 		position: relative;
   }
 	.chart-container[data-which="chart"] {
@@ -356,8 +361,7 @@
 
 	.control:before {
 		content: attr(data-which);
-		position: relative;
-		margin-right: 7px;
+		display: block;
 	}
 
 	.control[data-which="Color by"] {
@@ -372,10 +376,7 @@
 		font-weight: bold;
 		width: 60px;
 	}
-	.control.field:before {
-		width: 265px;
-		white-space: nowrap;
-	}
+
 
 	.control.select label {
 		margin-left: 7px;
@@ -393,7 +394,6 @@
 	}
 
 	.control select,
-	.control:before,
 	.slider {
 		display: inline-block;
 		vertical-align: middle;
@@ -401,6 +401,7 @@
 
 	.control:not(.select) span {
 		margin-left: 14px;
+		float: right;
 	}
 
 	.circle {

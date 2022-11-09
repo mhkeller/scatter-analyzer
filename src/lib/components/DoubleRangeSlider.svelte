@@ -6,6 +6,9 @@
 	/** @type {Number} */
 	export let end = 1;
 
+	/** @type {Array} */
+	export let labelExtent = []
+
 	/** @type {Element} */
 	let leftHandle;
 
@@ -114,20 +117,22 @@
 			class="handle"
 			bind:this={leftHandle}
 			data-which="start"
+			data-value="{start.toFixed(2)}"
+			data-label="{labelExtent[0]}"
 			use:draggable
 			on:dragmove="{setHandlePosition('start')}"
-			style="
-				left: {100 * start}%
-			"
+			style:left="{100 * start}%"
+			class:flip="{start > 0.33}"
 		></div>
 		<div
 			class="handle"
 			data-which="end"
+			data-value="{end.toFixed(2)}"
+			data-label="{labelExtent[1]}"
 			use:draggable
 			on:dragmove="{setHandlePosition('end')}"
-			style="
-				left: {100 * end}%
-			"
+			style:left="{100 * end}%"
+			class:flip="{end < 0.66}"
 		></div>
 	</div>
 </div>
@@ -183,5 +188,23 @@
 		background-color: #34a1ff;
 		bottom: 0;
 		cursor: col-resize;
+	}
+	.handle:before {
+		content: attr(data-value) ' (' attr(data-label) ')';
+		position: absolute;
+		top: 8px;
+		font-size: 12px;
+	}
+	.handle[data-which="start"]:before {
+		left: 0;
+	}
+	.handle[data-which="start"].flip:before {
+		transform: translateX(-100%);
+	}
+	.handle[data-which="end"]:before {
+		right: 0;
+	}
+	.handle[data-which="end"].flip:before {
+		transform: translateX(100%);
 	}
 </style>
