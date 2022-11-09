@@ -141,48 +141,78 @@
 
 	<div class="sidebar-a">
 		<div class="control-group" data-which="key-selectors">
-			<div class="control select" data-which="Color by">
-				<select bind:value={colorBy}>
-					{#each numFields as field, i}
-						<option value="{field}">{formatField(field)}</option>
-						<option value="{`${field}_qtl`}">{formatField(`${field}_qtl`)}</option>
-					{/each}
-				</select>
+
+			<!-- X-Axis -->
+			<div class="control select" data-which="X-Axis">
+				<div class="row">
+					<div class="label">X-Axis</div>
+					<select bind:value={xKey}>
+						{#each numFields as field}
+							<option value="{field}">{formatField(field)}</option>
+							<option value="{`${field}_qtl`}">{formatField(`${field}_qtl`)}</option>
+						{/each}
+					</select>
+					<div class="control-options">
+						<div class="control-option" on:click={() => lockExtentX = !lockExtentX}  on:keydown={() => lockExtentX = !lockExtentX}>{lockExtentX ? '🔒' : '🦋'}</div>
+						<div class="control-option" on:click={() => logScaleX = !logScaleX}  on:keydown={() => logScaleX = !logScaleX}>{logScaleX ? '🪵' : '→'}</div>
+					</div>
+				</div>
+				<!-- <label for="lock-extent-x"><input id="lock-extent-x" type="checkbox" bind:checked={lockExtentX}/> Lock extent</label>
+				<label for="log-scale-x"><input id="log-scale-x" type="checkbox" bind:checked={logScaleX}/> Log scale</label> -->
+				<!-- <span>min: {formatNumber(dataExtentXKey[0])}, max: {formatNumber(dataExtentXKey[1])}</span> -->
 			</div>
 
-			<!-- Axis dropdowns -->
-			<div class="control select" data-which="X-Axis">
-				<select bind:value={xKey}>
-					{#each numFields as field}
-						<option value="{field}">{formatField(field)}</option>
-						<option value="{`${field}_qtl`}">{formatField(`${field}_qtl`)}</option>
-					{/each}
-				</select>
-				<span>min: {formatNumber(dataExtentXKey[0])}, max: {formatNumber(dataExtentXKey[1])}</span>
-				<label for="lock-extent-x"><input id="lock-extent-x" type="checkbox" bind:checked={lockExtentX}/> Lock extent</label>
-				<label for="log-scale-x"><input id="log-scale-x" type="checkbox" bind:checked={logScaleX}/> Log scale</label>
+			<!-- Y-axis -->
+			<div class="control select">
+				<div class="row">
+					<div class="label">Y-Axis</div>
+					<select bind:value={yKey}>
+						{#each numFields as field}
+							<option value="{field}">{formatField(field)}</option>
+							<option value="{`${field}_qtl`}">{formatField(`${field}_qtl`)}</option>
+						{/each}
+					</select>
+					<div class="control-options">
+						<div class="control-option" on:click={() => lockExtentY = !lockExtentY}  on:keydown={() => lockExtentY = !lockExtentY}>{lockExtentY ? '🔒' : '🦋'}</div>
+						<div class="control-option" on:click={() => logScaleY = !logScaleY}  on:keydown={() => logScaleY = !logScaleY}>{logScaleY ? '🪵' : '→'}</div>
+					</div>
+				</div>
+				<!-- <span>min: {formatNumber(dataExtentYKey[0])}, max: {formatNumber(dataExtentYKey[1])}</span> -->
+				<!-- <label for="lock-extent-y"><input id="lock-extent-y" type="checkbox" bind:checked={lockExtentY}/> Lock extent</label>
+				<label for="log-scale-y"><input id="log-scale-y" type="checkbox" bind:checked={logScaleY}/> Log scale</label> -->
 			</div>
-			<div class="control select" data-which="Y-Axis">
-				<select bind:value={yKey}>
-					{#each numFields as field}
-						<option value="{field}">{formatField(field)}</option>
-						<option value="{`${field}_qtl`}">{formatField(`${field}_qtl`)}</option>
-					{/each}
-				</select>
-				<span>min: {formatNumber(dataExtentYKey[0])}, max: {formatNumber(dataExtentYKey[1])}</span>
-				<label for="lock-extent-y"><input id="lock-extent-y" type="checkbox" bind:checked={lockExtentY}/> Lock extent</label>
-				<label for="log-scale-y"><input id="log-scale-y" type="checkbox" bind:checked={logScaleY}/> Log scale</label>
+
+			<!-- Radius -->
+			<div class="control select">
+				<div class="row">
+					<div class="label">Radius</div>
+					<select bind:value={rKey}>
+						{#each numFields as field}
+							<option value="{field}">{formatField(field)}</option>
+							<option value="{`${field}_qtl`}">{formatField(`${field}_qtl`)}</option>
+						{/each}
+					</select>
+					<div class="control-options">
+						<div class="control-option" on:click={() => lockExtentR = !lockExtentR}  on:keydown={() => lockExtentR = !lockExtentR}>{lockExtentR ? '🔒' : '🦋'}</div>
+						<div class="control-option" on:click={() => constantR = !constantR}  on:keydown={() => constantR = !constantR}>{constantR ? '⚫️' : '🎈'}</div>
+					</div>
+				</div>
+				<!-- <span>min: {formatNumber(dataExtentRKey[0])}, max: {formatNumber(dataExtentRKey[1])}</span> -->
+				<!-- <label for="lock-extent-r"><input id="lock-extent-r" type="checkbox" bind:checked={lockExtentR}/> Lock extent</label>
+				<label for="constant-r"><input id="constant-r" type="checkbox" bind:checked={constantR}/> Fixed radius</label> -->
 			</div>
-			<div class="control select" data-which="Radius">
-				<select bind:value={rKey}>
-					{#each numFields as field}
-						<option value="{field}">{formatField(field)}</option>
-						<option value="{`${field}_qtl`}">{formatField(`${field}_qtl`)}</option>
-					{/each}
-				</select>
-				<span>min: {formatNumber(dataExtentRKey[0])}, max: {formatNumber(dataExtentRKey[1])}</span>
-				<label for="lock-extent-r"><input id="lock-extent-r" type="checkbox" bind:checked={lockExtentR}/> Lock extent</label>
-				<label for="constant-r"><input id="constant-r" type="checkbox" bind:checked={constantR}/> Fixed radius</label>
+
+			<!-- Color by -->
+			<div class="control select">
+				<div class="row">
+					<div class="label">Color by</div>
+					<select bind:value={colorBy}>
+						{#each numFields as field, i}
+							<option value="{field}">{formatField(field)}</option>
+							<option value="{`${field}_qtl`}">{formatField(`${field}_qtl`)}</option>
+						{/each}
+					</select>
+				</div>
 			</div>
 		</div>
 
@@ -204,6 +234,7 @@
 
 	<div class="gutter"></div>
 	<div class="mainbar">
+		<div class="copy-box"><span>{xKey}</span> vs. <span>{yKey}</span> sized by <span>{rKey}</span> colored by <span>{colorBy}</span></div>
 		<!-- Scatter Chart -->
 		<div class="chart-container" data-which="chart">
 			<LayerCake
@@ -327,6 +358,20 @@
 		flex-direction: column;
 	}
 
+	.copy-box span {
+		font-family: monospace;
+		padding: 7px;
+		background: #fff;
+		border: 1px solid #000;
+		color: #000;
+	}
+	.copy-box {
+		font-size: 16px;
+		color: #999;
+		margin: 0 auto;
+		margin-bottom: 14px;
+	}
+
 	.group-label {
 		font-weight: bold;
 		padding-bottom: 7px;
@@ -376,7 +421,7 @@
 		white-space: nowrap;
 	}
 
-	.control:before {
+	.control.field:before {
 		content: attr(data-which);
 		display: block;
 		padding: 2px 0;
@@ -387,24 +432,60 @@
 	.control-group[data-which="range-filters"] .control:before {
 		font-family: monospace;
 	}
-	.control.checkbox label {
+	/* .control.checkbox label {
 		position: relative;
 		left: 40px;
 	}
-	.control.checkbox:before,
+	.control.checkbox:before, */
 	.control.select:before {
 		font-weight: bold;
-		width: 60px;
+		margin-bottom: 7px;
+	}
+
+	.control-options {
+		display: flex;
+		flex-direction: row;
+		justify-content: flex-end;
+		user-select: none;
+	}
+	.control-option {
+		cursor: pointer;
+		margin-left: 7px;
+		font-size: 21px;
+	}
+	.control-option:hover {
 	}
 
 
 	.control.select label {
-		margin-left: 7px;
-		/* user-select: none; */
-		float: right;
-		/* margin-right: 108px; */
 		margin-top: 4px;
+		display: block;
 	}
+	.control.select .label {
+		font-weight: bold;
+		margin-right: 10px;
+	}
+	.control.select select {
+		font-family: monospace;
+		background: #fff;
+		/* color: #34a1ff; */
+		outline: 0;
+		/* appearance: none; */
+		border: none;
+		border-bottom: 1px solid #d8d8d8;
+		padding: 7px;
+		border-radius: 2px;
+		box-shadow: 2px 2px 12px 1px #eee;
+		transform: translateY(-25%);
+	}
+
+	.control.select .row {
+		display: flex;
+		flex-direction: row;
+		justify-content: space-between;
+		height: 35px;
+	}
+
 	.slider {
 		width: 208px;
 		margin-left: 7px;
