@@ -302,6 +302,9 @@
 		font-family: Helvetica, sans-serif;
 		padding-left: 14px;
 	}
+	.intro p {
+		font-style: italic;
+	}
 	.scatter-analyzer-wrapper {
 		background: #f5f8fa;
 		padding: 14px;
