@@ -136,21 +136,6 @@
 <div class="scatter-analyzer-wrapper">
 
 	<div class="sidebar-a">
-		<div class="control-group" which="range-filters">
-			<div class="group-label">Filter by:</div>
-			{#each Object.keys(filters) as key}
-				<div class="control field" data-which="{key}">
-					<div class="slider">
-						<DoubleRangeSlider
-							bind:start={filters[key][0]}
-							bind:end={filters[key][1]}
-							labelExtent={allExtents[key].map(formatNumber2)}
-						/>
-					</div>
-				</div>
-			{/each}
-		</div>
-
 		<div class="control-group" data-which="key-selectors">
 			<div class="control select" data-which="Color by">
 				<select bind:value={colorBy}>
@@ -196,8 +181,24 @@
 				<label for="constant-r"><input id="constant-r" type="checkbox" bind:checked={constantR}/> Fixed radius</label>
 			</div>
 		</div>
+
+		<div class="control-group" data-which="range-filters">
+			<div class="group-label">Filter by:</div>
+			{#each Object.keys(filters) as key}
+				<div class="control field" data-which="{key}">
+					<div class="slider">
+						<DoubleRangeSlider
+							bind:start={filters[key][0]}
+							bind:end={filters[key][1]}
+							labelExtent={allExtents[key].map(formatNumber2)}
+						/>
+					</div>
+				</div>
+			{/each}
+		</div>
 	</div>
 
+	<div class="gutter"></div>
 	<div class="mainbar">
 		<!-- Scatter Chart -->
 		<div class="chart-container" data-which="chart">
@@ -297,12 +298,16 @@
 		background: #f5f8fa;
 		padding: 14px;
 		width: 100%;
+		max-width: 1200px;
 		font-family: Helvetica, sans-serif;
 		display: flex;
 		flex-direction: row;
 	}
 	.sidebar-a {
 		flex: 1
+	}
+	.gutter {
+		width: 12px;
 	}
 	.mainbar {
 		flex: 7;
@@ -313,6 +318,7 @@
 
 	.group-label {
 		font-weight: bold;
+		padding-bottom: 7px;
 	}
 
   .chart-container {
@@ -362,10 +368,13 @@
 	.control:before {
 		content: attr(data-which);
 		display: block;
+		padding: 2px 0;
 	}
-
-	.control[data-which="Color by"] {
-		margin-top: 21px;
+	.control-group[data-which="range-filters"] {
+		margin-top: 51px;
+	}
+	.control-group[data-which="range-filters"] .control:before {
+		font-family: monospace;
 	}
 	.control.checkbox label {
 		position: relative;
@@ -380,17 +389,15 @@
 
 	.control.select label {
 		margin-left: 7px;
-		user-select: none;
+		/* user-select: none; */
 		float: right;
 		/* margin-right: 108px; */
 		margin-top: 4px;
 	}
 	.slider {
 		width: 208px;
-	}
-
-	.control.select {
-		margin-bottom: 21px;
+		margin-left: 7px;
+		margin-bottom: 14px;
 	}
 
 	.control select,

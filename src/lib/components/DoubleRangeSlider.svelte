@@ -117,23 +117,21 @@
 			class="handle"
 			bind:this={leftHandle}
 			data-which="start"
-			data-value="{start.toFixed(2)}"
-			data-label="{labelExtent[0]}"
 			use:draggable
 			on:dragmove="{setHandlePosition('start')}"
 			style:left="{100 * start}%"
-			class:flip="{start > 0.33}"
 		></div>
 		<div
 			class="handle"
 			data-which="end"
-			data-value="{end.toFixed(2)}"
-			data-label="{labelExtent[1]}"
 			use:draggable
 			on:dragmove="{setHandlePosition('end')}"
 			style:left="{100 * end}%"
-			class:flip="{end < 0.66}"
 		></div>
+	<div class="values">
+		<div>{start.toFixed(2)} ({labelExtent[0]})</div>
+		<div>{end.toFixed(2)} ({labelExtent[1]})</div>
+	</div>
 	</div>
 </div>
 
@@ -189,22 +187,19 @@
 		bottom: 0;
 		cursor: col-resize;
 	}
-	.handle:before {
-		content: attr(data-value) ' (' attr(data-label) ')';
-		position: absolute;
-		top: 8px;
+	.values {
+		width: 100%;
+		display: flex;
 		font-size: 12px;
+		padding-top: 12px;
 	}
-	.handle[data-which="start"]:before {
-		left: 0;
+	.values div {
+		flex: 1;
 	}
-	.handle[data-which="start"].flip:before {
-		transform: translateX(-100%);
+	.values div:nth-child(1) {
+		text-align: left;
 	}
-	.handle[data-which="end"]:before {
-		right: 0;
-	}
-	.handle[data-which="end"].flip:before {
-		transform: translateX(100%);
+	.values div:nth-child(2) {
+		text-align: right;
 	}
 </style>
