@@ -194,7 +194,7 @@
 					</select>
 					<div class="control-options">
 						<div class="control-option" on:click={() => lockExtentR = !lockExtentR}  on:keydown={() => lockExtentR = !lockExtentR}>{lockExtentR ? '🔒' : '🦋'}</div>
-						<div class="control-option" on:click={() => constantR = !constantR}  on:keydown={() => constantR = !constantR}>{constantR ? '⚫️' : '🎈'}</div>
+						<div class="control-option" on:click={() => constantR = !constantR}  on:keydown={() => constantR = !constantR}>{constantR ? '🪨' : '🎈'}</div>
 					</div>
 				</div>
 				<!-- <span>min: {formatNumber(dataExtentRKey[0])}, max: {formatNumber(dataExtentRKey[1])}</span> -->
@@ -234,7 +234,11 @@
 
 	<div class="gutter"></div>
 	<div class="mainbar">
-		<div class="copy-box"><span>{xKey}</span> vs. <span>{yKey}</span> sized by <span>{rKey}</span> colored by <span>{colorBy}</span></div>
+		<div class="copy-box">
+			<span>{xKey}</span> vs. <span>{yKey}</span>
+			{#if constantR === false} sized by <span>{rKey}</span>
+			{/if} colored by <span>{colorBy}</span>
+		</div>
 		<!-- Scatter Chart -->
 		<div class="chart-container" data-which="chart">
 			<LayerCake
