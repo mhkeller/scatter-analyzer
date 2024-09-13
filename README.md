@@ -1,6 +1,8 @@
 Scatter Analyzer
 ===
 
+> Work-in-progress scatterplot analysis interface
+
 ## Dev
 
 ```bash
