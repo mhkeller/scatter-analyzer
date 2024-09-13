@@ -52,6 +52,8 @@
 	export let colorByScheme;
 	/** @type {any} */
 	export let rRange;
+	/** @type {Boolean} */
+	export let showMap = true;
 
 	/** @type {String} */
 	let colorBy;
@@ -255,11 +257,9 @@
 				yPadding={logScaleY ? [0, 40] : [25, 25]}
 				rRange={constantR ? [r, r] : rRange}
 				data={filteredFeatures}
-				extents={{
-					x: lockExtentX ? dataExtentXKey : undefined,
-					y: lockExtentY ? dataExtentYKey : undefined,
-					r: lockExtentR ? dataExtentRKey : undefined
-				}}
+				xDomain={lockExtentX ? dataExtentXKey : undefined}
+				yDomain={lockExtentY ? dataExtentYKey : undefined}
+				rDomain={lockExtentR ? dataExtentRKey : undefined}
 			>
 				<Svg>
 					<AxisX
@@ -314,21 +314,23 @@
 			</LayerCake>
 		</div>
 
-		<!-- Maps -->
-		<div class="chart-container" data-which="map">
-			<MapboxMap
-				colorKey={colorBy}
-				rKey={rKey}
-				colorExtent={dataExtent}
-				rExtent={dataExtentRKey}
-				features={filteredFeatures}
-				{tooltipKeys}
-				{constantR}
-				{rRange}
-				{colorByScheme}
-				accessToken={mapboxToken}
-			/>
-		</div>
+		{#if showMap === true}
+			<!-- Maps -->
+			<div class="chart-container" data-which="map">
+				<MapboxMap
+					colorKey={colorBy}
+					rKey={rKey}
+					colorExtent={dataExtent}
+					rExtent={dataExtentRKey}
+					features={filteredFeatures}
+					{tooltipKeys}
+					{constantR}
+					{rRange}
+					{colorByScheme}
+					accessToken={mapboxToken}
+				/>
+			</div>
+		{/if}
 	</div>
 </div>
 
